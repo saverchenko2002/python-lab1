@@ -13,7 +13,5 @@ if __name__ != "__main__":
     density = np.random.randint(100, size=(size, size))
     point_color = 'green'
     gradient_color = 'Greys'
-    x = [0]
-    x.pop()
-    y = [0]
-    y.pop()
+    x = []
+    y = []
