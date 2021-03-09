@@ -5,24 +5,25 @@ def search_start(array):
     [x, y] = random.randint(0, size - 1), random.randint(0, size - 1)
     while array[x][y] != 1:
         [x, y] = random.randint(0, size - 1), random.randint(0, size - 1)
-    print('{}->'.format((x, y)))
     return x, y
 
 
 class Cell:
     def __init__(self, x, y, value):
-        self.routes = {'r': False, 'l': False, 'd': False, 'u': False}
+        self.routes = {'0': False, '1': False, '2': False, '3': False}
         self.visited = False
         self.value = value
         self.coordinates = (x, y)
 
-    def __repr__(self):
-        return '{} {}'.format(self.coordinates[0], self.coordinates[1])
+
+stack = [search_start(matrix)]
+stack_current_move = []
 
 
 class Field:
-    x_current, y_current = search_start(matrix)
-    finished = False
+    i = 0
+    x_start, y_start = stack[0]
+    x_current, y_current = x_start, y_start
 
     def __init__(self, array):
         self.field = []
@@ -31,7 +32,95 @@ class Field:
             for n in range(size):
                 a.append(Cell(m, n, array[m][n]))
             self.field.append(a)
-        print(self.field[Field.x_current][Field.y_current].value)
 
 
-work_field = Field(matrix)
+def search():
+    work_field = Field(matrix)
+    work_field.field[Field.x_start][Field.y_start].visited = True
+    while Field.i != -1:
+        exist = False
+        Field.x_current, Field.y_current = stack[Field.i]
+        while 0 <= Field.x_current < 14:
+            Field.x_current += 1
+            if work_field.field[Field.x_current][Field.y_current].value == 1:
+                stack_current_move.append((Field.x_current, Field.y_current))
+                exist = True
+                break
+        Field.x_current, Field.y_current = stack[Field.i]
+        if not exist:
+            stack_current_move.append((-1, -1))
+        else:
+            exist = False
+
+        while 0 < Field.x_current <= 14:
+            Field.x_current -= 1
+            if work_field.field[Field.x_current][Field.y_current].value == 1:
+                stack_current_move.append((Field.x_current, Field.y_current))
+                exist = True
+                break
+        Field.x_current, Field.y_current = stack[Field.i]
+        if not exist:
+            stack_current_move.append((-1, -1))
+        else:
+            exist = False
+
+        while 0 <= Field.y_current < 14:
+            Field.y_current += 1
+            if work_field.field[Field.x_current][Field.y_current].value == 1:
+                stack_current_move.append((Field.x_current, Field.y_current))
+                exist = True
+                break
+        Field.x_current, Field.y_current = stack[Field.i]
+        if not exist:
+            stack_current_move.append((-1, -1))
+        else:
+            exist = False
+
+        while 0 < Field.y_current <= 14:
+            Field.y_current -= 1
+            if work_field.field[Field.x_current][Field.y_current].value == 1:
+                stack_current_move.append((Field.x_current, Field.y_current))
+                exist = True
+                break
+        Field.x_current, Field.y_current = stack[Field.i]
+        if not exist:
+            stack_current_move.append((-1, -1))
+
+        for c in range(len(stack_current_move)):
+            x_current, y_current = stack_current_move[c]
+            if stack_current_move[c] != (-1, -1):
+                if work_field.field[Field.x_current][Field.y_current].routes['0'] and c == 1:
+                    continue
+                elif work_field.field[Field.x_current][Field.y_current].routes['1'] and c == 0:
+                    continue
+                elif work_field.field[Field.x_current][Field.y_current].routes['2'] and c == 3:
+                    continue
+                elif work_field.field[Field.x_current][Field.y_current].routes['3'] and c == 2:
+                    continue
+                if work_field.field[x_current][y_current].visited:
+                    stack.append((x_current, y_current))
+                    Field.i = -1
+                    break
+                else:
+                    if c == 0:
+                        work_field.field[x_current][y_current].routes['0'] = True
+                    elif c == 1:
+                        work_field.field[x_current][y_current].routes['1'] = True
+                    elif c == 2:
+                        work_field.field[x_current][y_current].routes['2'] = True
+                    elif c == 3:
+                        work_field.field[x_current][y_current].routes['3'] = True
+
+                stack.append(stack_current_move[c])
+                Field.i += 1
+                stack_current_move.clear()
+                work_field.field[x_current][y_current].visited = True
+                break
+
+
+search()
+for n in range(len(stack)):
+    if n == len(stack) - 1:
+        print(format(stack[n]), end=' ')
+        break
+    print('{}->'.format(stack[n]), end=' ')
