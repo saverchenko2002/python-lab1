@@ -13,11 +13,9 @@ class Cell:
         self.routes = {'0': False, '1': False, '2': False, '3': False}
         self.visited = False
         self.value = value
-        self.coordinates = (x, y)
 
 
 stack = [search_start(matrix)]
-stack_current_move = []
 
 
 class Field:
