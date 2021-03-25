@@ -38,7 +38,7 @@ def search():
     while Field.i != -1:
         exist = False
         Field.x_current, Field.y_current = stack[Field.i]
-        while 0 <= Field.x_current < 14:
+        while 0 <= Field.x_current < size - 1:
             Field.x_current += 1
             if work_field.field[Field.x_current][Field.y_current].value == 1:
                 stack_current_move.append((Field.x_current, Field.y_current))
@@ -50,7 +50,7 @@ def search():
         else:
             exist = False
 
-        while 0 < Field.x_current <= 14:
+        while 0 < Field.x_current <= size - 1:
             Field.x_current -= 1
             if work_field.field[Field.x_current][Field.y_current].value == 1:
                 stack_current_move.append((Field.x_current, Field.y_current))
@@ -62,7 +62,7 @@ def search():
         else:
             exist = False
 
-        while 0 <= Field.y_current < 14:
+        while 0 <= Field.y_current < size - 1:
             Field.y_current += 1
             if work_field.field[Field.x_current][Field.y_current].value == 1:
                 stack_current_move.append((Field.x_current, Field.y_current))
@@ -122,3 +122,8 @@ for n in range(len(stack)):
         print(format(stack[n]), end=' ')
         break
     print('{}->'.format(stack[n]), end=' ')
+
+a = [[0 for i in range(5)] for j in range(5)]
+print(a)
+a[1:4, 2] = [1 for i in range(3)]
+print(a)

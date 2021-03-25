@@ -47,7 +47,6 @@ def search():
         while 0 <= Field.y_current < size - 1:
             Field.y_current += 1
             if work_field.field[Field.x_current, Field.y_current].value == -1 or work_field.field[Field.x_current, Field.y_current].visited:
-                work_field.field[single_points[Field.count]].routes['R'] = False
                 Field.y_current = single_points[Field.count][1]
                 break
             elif work_field.field[Field.x_current, Field.y_current].value == 1 and \
@@ -57,28 +56,23 @@ def search():
                 Field.count += 1
                 for i in work_field.field[Field.x_current, single_points[Field.count - 1][1] + 1:single_points[Field.count][1]]:
                     i.value = -1
-                work_field.field[single_points[Field.count - 1]].routes['R'] = False
-                work_field.field[single_points[Field.count]].routes['L'] = False
                 Field.prev_move.append('R')
                 break
             elif Field.y_current == size - 1 and work_field.field[Field.x_current, Field.y_current].value != 1:
-                work_field.field[single_points[Field.count]].routes['R'] = False
                 Field.y_current = single_points[Field.count][1]
                 break
         while 0 < Field.y_current <= size - 1:
             Field.y_current -= 1
             if work_field.field[Field.x_current, Field.y_current].value == -1 or work_field.field[Field.x_current, Field.y_current].visited:
-                work_field.field[single_points[Field.count]].routes['L'] = False
                 Field.y_current = single_points[Field.count][1]
                 break
             elif work_field.field[Field.x_current, Field.y_current].value == 1 and \
                     work_field.field[Field.x_current, Field.y_current].routes['L'] and not work_field.field[Field.x_current, Field.y_current].visited:
                 single_points.append((Field.x_current, Field.y_current))
+                work_field.field[Field.x_current, Field.y_current].visited = True
                 Field.count += 1
                 for i in work_field.field[Field.x_current, single_points[Field.count][1] + 1:single_points[Field.count - 1][1]]:
                     i.value = -1
-                work_field.field[single_points[Field.count - 1]].routes['L'] = False
-                work_field.field[single_points[Field.count]].routes['R'] = False
                 Field.prev_move.append('L')
                 break
             elif Field.y_current == 0 and work_field.field[Field.x_current, Field.y_current].value != 1:
@@ -88,45 +82,38 @@ def search():
         while 0 <= Field.x_current < size - 1:
             Field.x_current += 1
             if work_field.field[Field.x_current, Field.y_current].value == -1 or work_field.field[Field.x_current, Field.y_current].visited:
-                work_field.field[single_points[Field.count]].routes['D'] = False
                 Field.x_current = single_points[Field.count][0]
                 break
             elif work_field.field[Field.x_current, Field.y_current].value == 1 and \
                     work_field.field[Field.x_current, Field.y_current].routes['D'] and not work_field.field[Field.x_current, Field.y_current].visited:
                 single_points.append((Field.x_current, Field.y_current))
+                work_field.field[Field.x_current, Field.y_current].visited = True
                 Field.count += 1
                 for i in work_field.field[single_points[Field.count - 1][0] + 1:single_points[Field.count][0], Field.y_current]:
                     i.value = -1
-                work_field.field[single_points[Field.count - 1]].routes['D'] = False
-                work_field.field[single_points[Field.count]].routes['U'] = False
                 Field.prev_move.append('D')
                 break
             elif Field.x_current == size - 1 and work_field.field[Field.x_current, Field.y_current].value != 1:
-                work_field.field[single_points[Field.count]].routes['D'] = False
                 Field.x_current = single_points[Field.count][0]
                 break
         while 0 < Field.x_current <= size - 1:
             Field.x_current -= 1
             if work_field.field[Field.x_current, Field.y_current].value == -1 or work_field.field[Field.x_current, Field.y_current].visited:
-                work_field.field[single_points[Field.count]].routes['U'] = False
                 Field.x_current = single_points[Field.count][0]
                 break
             elif work_field.field[Field.x_current, Field.y_current].value == 1 and \
                     work_field.field[Field.x_current, Field.y_current].routes['U'] and not work_field.field[Field.x_current, Field.y_current].visited:
                 single_points.append((Field.x_current, Field.y_current))
+                work_field.field[Field.x_current, Field.y_current].visited = True
                 Field.count += 1
                 for i in work_field.field[single_points[Field.count][0] + 1:single_points[Field.count - 1][0], Field.y_current]:
                     i.value = -1
-                work_field.field[single_points[Field.count - 1]].routes['U'] = False
-                work_field.field[single_points[Field.count]].routes['D'] = False
                 Field.prev_move.append('U')
                 break
             elif Field.x_current == size - 1 and work_field.field[Field.x_current, Field.y_current].value != 1:
-                work_field.field[single_points[Field.count]].routes['U'] = False
                 Field.x_current = single_points[Field.count][1]
                 break
         if prev_iter_count == Field.count:
-            work_field.field[Field.x_current, Field.y_current].visited = False
             Field.count -= 1
             Field.x_current = single_points[Field.count][0]
             Field.y_current = single_points[Field.count][1]
@@ -147,6 +134,7 @@ def search():
                 if y < single_points[Field.count][1]:
                     for i in work_field.field[x+1:single_points[Field.count][0], y]:
                         i.value = 0
+        print(Field.prev_move)
         print(single_points)
 
 
